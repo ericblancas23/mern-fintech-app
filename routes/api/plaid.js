@@ -80,5 +80,24 @@ router.delete("/accounts/:id", passport.authenticate("jwt", { session: false }),
               }
 )
 
+//@route GET 
+//Desc Get all accounts with existing id
+//@access private
+router.get("/accounts", passport.authenticate({ session: false }), 
+           (req, res) => {
+               Account.find({ userId: req.user.id })
+                    .then(accounts => res.json(accounts))
+                    .catch(err => console.log(err));
+           }
+);
+
+//@route GET
+//Desc Get transactions
+//@access private
+// router.post("/accounts/transactions", passport.authenticate({ session: false }),
+//             (req, res) => {
+//                 const now = moment();
+//             }
+// )
 module.exports = router;
 
