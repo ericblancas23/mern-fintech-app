@@ -1,8 +1,7 @@
 import axios from 'axios';
 import {
     ADD_ACCOUNT,
-    DELTE_ACCOUNT,
-    GET_ACCOUNT,
+    GET_ACCOUNTS,
     GET_TRANSACTIONS,
     ACCOUNTS_LOADING,
     TRANSACTIONS_LOADING,
@@ -55,13 +54,13 @@ export const getAccounts = () => dispatch => {
         .get("/api/plaid/accounts")
         .then(res => 
             dispatch({
-                type: GET_ACCOUNT,
+                type: GET_ACCOUNTS,
                 payload: res.data,
             })
         )
         .catch(err =>
             dispatch({
-                type: GET_ACCOUNT,
+                type: GET_ACCOUNTS,
                 payload: null,
             })
         );
