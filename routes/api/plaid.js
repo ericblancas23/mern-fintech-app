@@ -16,6 +16,7 @@ const client = new plaid.Client(
     PLAID_CLIENT_ID,
     PLAID_SECRET,
     PLAID_PUBLIC_KEY,
+    plaid.environments.sandbox,
     { version: "2019-09-01"}
 );
 
@@ -94,10 +95,34 @@ router.get("/accounts", passport.authenticate({ session: false }),
 //@route GET
 //Desc Get transactions
 //@access private
-// router.post("/accounts/transactions", passport.authenticate({ session: false }),
-//             (req, res) => {
-//                 const now = moment();
-//             }
-// )
+router.post("/accounts/transactions", passport.authenticate({ session: false }),
+            (req, res) => {
+                const now = moment();
+                const today = now.format("YYYY-MM-DD");
+                const thirtyDaysAgo = now.subtract(30, "days").format("YYYY-MM-DD"); // Change this if you want more transactions
+
+                let transactions = [];
+
+                const accounts = req.body;
+                if(accounts) {
+                    accounts.forEach(function(account) {
+                        ACCESS_TOKEN = account.accessToken;
+                        const institutionName = account.institutionName;
+                    client
+                        .getAllTransactions(ACCESS_TOKEN, thirtyDaysAgo, today)
+                        .then(response => {
+                            transactions.push({
+                                accountName: institutionName,
+                                transactions: response.transactions,
+                            });
+                            if(transactions.length === accounts.length) {
+                                res.json(transactions);
+                            }
+                        })
+                        .catch(err => console.log(err));
+                    });
+                }
+            }
+)
 module.exports = router;
 
