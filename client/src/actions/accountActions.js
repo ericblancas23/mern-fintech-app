@@ -26,7 +26,7 @@ export const addAccount = plaidData => dispatch => {
             dispatch(getTransactions(accounts.concat(data.payload))):null
         )
         .catch(err => console.log(err))
-}
+};
 
 //delete
 export const deleteAccount = plaidData => dispatch => {
@@ -47,4 +47,28 @@ export const deleteAccount = plaidData => dispatch => {
                 dispatch(getTransactions(newAccounts)):null)
             .catch(err => console.log(err))
     }
-}
+};
+
+export const getAccounts = () => dispatch => {
+    dispatch(setAccountsLoading());
+    axios
+        .get("/api/plaid/accounts")
+        .then(res => 
+            dispatch({
+                type: GET_ACCOUNT,
+                payload: res.data,
+            })
+        )
+        .catch(err =>
+            dispatch({
+                type: GET_ACCOUNT,
+                payload: null,
+            })
+        );
+};
+
+export const setAccountsLoading = () => {
+    return {
+        type: ACCOUNTS_LOADING,
+    };
+};
