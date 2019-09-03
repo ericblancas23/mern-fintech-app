@@ -72,3 +72,27 @@ export const setAccountsLoading = () => {
         type: ACCOUNTS_LOADING,
     };
 };
+
+export const getTransactions = plaidData => dispatch => {
+    dispatch(setTransactionsLoading());
+    axios
+        .post("/api/plaid/accounts/transactions", plaidData)
+        .then(res => 
+            dispatch({
+                type: GET_TRANSACTIONS,
+                payload: res.data,
+            })
+        )
+        .catch(err => 
+            dispatch({
+                type: GET_TRANSACTIONS,
+                payload: null,
+            })
+        );
+};
+
+export const setTransactionsLoading = () => {
+    return {
+        type: TRANSACTIONS_LOADING,
+    }
+};
